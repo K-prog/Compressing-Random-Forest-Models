@@ -1,5 +1,7 @@
 import gzip
 import numpy as np
+from sklearn.tree import _tree
+import json
 
 def extract_tree_structure(decision_tree, feature_names, precision=4):
     """
