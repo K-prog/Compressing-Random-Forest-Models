@@ -2,7 +2,7 @@ import argparse
 import os
 from pathlib import Path
 from joblib import load
-from utils import extract_tree_structure
+from utils import extract_tree_structure, compare_predictions
 import json
 import gzip
 
@@ -51,3 +51,5 @@ if __name__ == '__main__':
 
     print("Model size reduced from", size_mb,"MB to",gzip_size_mb,"MB",)
     print(str(compression_rate)+"%","Compression Rate")
+
+    compare_predictions(model_path, gzip_path)

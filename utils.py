@@ -2,6 +2,10 @@ import gzip
 import numpy as np
 from sklearn.tree import _tree
 import json
+from joblib import load
+import random
+from sklearn.metrics import r2_score
+import time
 
 def extract_tree_structure(decision_tree, feature_names, precision=4):
     """
@@ -131,3 +135,33 @@ def predict_with_model(trees, features, feature_names):
     predictions = [predict_from_tree(tree, features, feature_names) for tree in trees]
     # Aggregate predictions (e.g., by averaging for a regression problem)
     return np.mean(predictions, axis=0)
+
+def compare_predictions(joblib_model_path, json_model_path):
+
+    joblib_model = load(joblib_model_path)
+    json_model = load_model(json_model_path)
+
+    num_features = joblib_model.n_features_in_
+    
+    # Creating Random Dataset
+
+    prediction_joblib, prediction_json = [], []
+    feature_names = [i for i in range(num_features)]
+
+    print()
+    print("Comparing both models for 5000 sets for input features!")
+
+    for _ in range(5000):
+        features = [random.random() for _ in range(num_features)]
+
+        prediction_joblib.append(np.squeeze(joblib_model.predict([features])))
+        prediction_json.append(np.squeeze(predict_with_model(json_model, features, feature_names)))
+
+    prediction_joblib = np.array(prediction_joblib)
+    prediction_json = np.array(prediction_json)
+
+    for outputs in range(prediction_json.shape[-1]):
+        pred_json = [i[outputs] for i in prediction_joblib]
+        pred_joblib = [i[outputs] for i in prediction_json]
+        score = r2_score(pred_json, pred_joblib)
+        print("R2 score for output feature ("+str(outputs)+") is",str(round(score,2)))
