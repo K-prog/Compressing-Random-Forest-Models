@@ -9,11 +9,11 @@ import gzip
 
 if __name__ == '__main__':
     args = argparse.ArgumentParser()
-    args.add_argument("-model_path", "--model", type=str, help="Path to Random Forest model", required=True)
+    args.add_argument("-path", "--model_path", type=str, help="Path to Random Forest model", required=True)
     args.add_argument("-p", "--precision", type=int, help="Decimal Precision allowed", required=True)
 
     arg = vars(args.parse_args())
-    model_path = Path(arg.get('model'))
+    model_path = Path(arg.get('model_path'))
     precision = arg.get('precision')
     
     size_mb = round((os.path.getsize(model_path)/1000000),2)
@@ -32,7 +32,7 @@ if __name__ == '__main__':
 
     os.makedirs(file_paths, exist_ok=True)
 
-    print("Saving model json...")
+    print(f"\nSaving model json with decimal precision of {precision}...")
     with open(json_path, 'w') as f:
         json.dump(model_dict, f)
 
@@ -40,7 +40,7 @@ if __name__ == '__main__':
     with open(json_path, 'r') as f:
         json_data = f.read()
 
-    print("Compressing json with gzip...")
+    print("\nCompressing json with gzip...")
     with gzip.open(gzip_path, 'wt', encoding='UTF-8') as zipfile:
         zipfile.write(json_data)
     print("Compression complete at path",'\033[1m\033[3m'+gzip_path+'\033[0m',"\u2705")
@@ -49,7 +49,7 @@ if __name__ == '__main__':
     compression_rate = round(((size_mb - gzip_size_mb) / size_mb) * 100,2)
 
 
-    print("Model size reduced from", size_mb,"MB to",gzip_size_mb,"MB",)
+    print("\nModel size reduced from", size_mb,"MB to",gzip_size_mb,"MB",)
     print(str(compression_rate)+"%","Compression Rate")
 
     compare_predictions(model_path, gzip_path)

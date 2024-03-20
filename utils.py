@@ -136,32 +136,48 @@ def predict_with_model(trees, features, feature_names):
     # Aggregate predictions (e.g., by averaging for a regression problem)
     return np.mean(predictions, axis=0)
 
-def compare_predictions(joblib_model_path, json_model_path):
 
+def compare_predictions(joblib_model_path, json_model_path):
+    """
+    Compares predictions made by two models loaded from given paths, one in Joblib format and the other in JSON format,
+    on a randomly generated dataset. It calculates and prints the R2 score for the predictions from both models.
+
+    Parameters:
+    - joblib_model_path (str): The file path to the Joblib model file.
+    - json_model_path (str): The file path to the JSON model file.
+
+    The function assumes both models accept the same number of features and can make predictions on a similar dataset.
+    It generates a dataset with 1000 instances, each instance having a number of features equal to `n_features_in_` of the Joblib model.
+    It prints the R2 score to evaluate how similar the models' predictions are, considering one model's predictions as the true values and the other's as predicted values.
+    """
+    
+    # Load models from the provided paths
     joblib_model = load(joblib_model_path)
     json_model = load_model(json_model_path)
 
+    # Determine the number of input features based on the joblib model
     num_features = joblib_model.n_features_in_
-    
-    # Creating Random Dataset
-
-    prediction_joblib, prediction_json = [], []
-    feature_names = [i for i in range(num_features)]
-
+    len_test = 1000
     print()
-    print("Comparing both models for 5000 sets for input features!")
+    print(f"Comparing both models for {len_test} sets for input features!")
+    # Generate a random dataset of 1000 samples, each with `num_features` features
+    features = np.random.rand(len_test, num_features)
 
-    for _ in range(5000):
-        features = [random.random() for _ in range(num_features)]
+    # Generate predictions for each model based on the generated dataset
+    # Using np.squeeze to ensure the prediction arrays are in the correct shape for comparison
 
-        prediction_joblib.append(np.squeeze(joblib_model.predict([features])))
-        prediction_json.append(np.squeeze(predict_with_model(json_model, features, feature_names)))
+    prediction_joblib = np.squeeze(joblib_model.predict(features))
+    prediction_json = np.squeeze(np.array([predict_with_model(json_model, feature, list(range(num_features))) for feature in features]))
 
-    prediction_joblib = np.array(prediction_joblib)
-    prediction_json = np.array(prediction_json)
-
-    for outputs in range(prediction_json.shape[-1]):
-        pred_json = [i[outputs] for i in prediction_joblib]
-        pred_joblib = [i[outputs] for i in prediction_json]
-        score = r2_score(pred_json, pred_joblib)
-        print("R2 score for output feature ("+str(outputs)+") is",str(round(score,2)))
+    # Compare predictions dimension-wise if they are multi-dimensional, else compare directly
+    if prediction_json.ndim > 1:
+        # Iterate through each dimension (output feature) and calculate the R2 score
+        for outputs in range(prediction_json.shape[-1]):
+            pred_json = prediction_joblib[:, outputs]
+            pred_joblib = prediction_json[:, outputs]
+            score = r2_score(pred_json, pred_joblib)
+            print(f"R2 score for output feature ({outputs}) is {round(score, 2)}")
+    else:
+        # Calculate and print the R2 score for single-dimensional predictions
+        score = r2_score(prediction_joblib, prediction_json)
+        print(f"R2 score for output feature is {round(score, 2)}")
