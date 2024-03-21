@@ -4,5 +4,4 @@ conversions
 *.json
 *.gz
 *.joblib
-*.ipynb
 *.pyc
