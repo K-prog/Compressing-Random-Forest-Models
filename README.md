@@ -63,3 +63,5 @@ The trends for size and R2 score b/w joblib and JSON for this sample model on th
 
 _The compression rate was over 90% for all the precison values as original model size is 200MB_
 ![App Screenshot](https://cdn.discordapp.com/attachments/829041911028776960/1220379100422737960/image.png?ex=660eb99b&is=65fc449b&hm=d2d5159b563115d5dc1afcb3f4595c7bb7f63c6fb1c88ff6d2f33035cf99a81d&)
+
+**A quick and fun read:**[**ヽ༼ ʘ̚ل͜ʘ̚༽ﾉ**](https://karansingh3267.medium.com/compressing-random-forest-models-with-over-90-reduction-in-size-24c3e7d1f52b)
