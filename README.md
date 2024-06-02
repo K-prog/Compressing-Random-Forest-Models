@@ -20,7 +20,7 @@ pip install -r requirements.txt
 2) Creating a sample Random Forest using [createSampleModel.ipynb](https://github.com/K-prog/Compressing-Random-Forest-Models/blob/main/createSampleModel.ipynb)
 _If you already have a Random Forest .joblib model, skip directly to step 3._
 
-![App Screenshot](https://cdn.discordapp.com/attachments/829041911028776960/1220000792690429972/image.png?ex=660d5947&is=65fae447&hm=81b054631040d551730ea50785786bd2ce9ed3397522647c5f6f2a289a4da44f&)
+![App Screenshot](https://github.com/K-prog/Compressing-Random-Forest-Models/blob/main/assets/image.png?raw=true)
 
 3) Converting the model via [convertModel.py](https://github.com/K-prog/Compressing-Random-Forest-Models/blob/main/convertModel.py)
 ```bash
@@ -32,10 +32,10 @@ python convertModel.py -path "conversions/test_small.joblib" -p 4
 | -p    | int(>=0)    | Decimal precision allowed    |
 
 For single output regression model with precision set to 2.
-![App Screenshot](https://cdn.discordapp.com/attachments/829041911028776960/1220024334605619230/image.png?ex=660d6f34&is=65fafa34&hm=382886a42bdd47d3c08700bce4e603db74a87bbd4d476eec6d088803356ff377&)
+![App Screenshot](https://github.com/K-prog/Compressing-Random-Forest-Models/blob/main/assets/image%20(1).png?raw=true)
 
 For multiple output regression model with precision set to 1.
-![App Screenshot](https://cdn.discordapp.com/attachments/829041911028776960/1220024755470602341/image.png?ex=660d6f98&is=65fafa98&hm=d82066aaa875953ec8c81ac2814049ce139d078ee8c1f1651af6c84444229967&)
+![App Screenshot](https://github.com/K-prog/Compressing-Random-Forest-Models/blob/main/assets/image%20(2).png?raw=true)
 
 
 Note: With dense models where size is greater than 200 MB, **_3>=p>=5_** achieves great results. Less complex models can even work with lower precisions, rest is up to your experimentation ;-;
@@ -62,6 +62,6 @@ random_forest_model.fit(X_train, y_train)
 The trends for size and R2 score b/w joblib and JSON for this sample model on the bases of decimal precision :
 
 _The compression rate was over 90% for all the precison values as original model size is 200MB_
-![App Screenshot](https://cdn.discordapp.com/attachments/829041911028776960/1220379100422737960/image.png?ex=660eb99b&is=65fc449b&hm=d2d5159b563115d5dc1afcb3f4595c7bb7f63c6fb1c88ff6d2f33035cf99a81d&)
+![App Screenshot](https://github.com/K-prog/Compressing-Random-Forest-Models/blob/main/assets/image%20(3).png?raw=true)
 
 **A quick and fun read:**[**ヽ༼ ʘ̚ل͜ʘ̚༽ﾉ**](https://karansingh3267.medium.com/compressing-random-forest-models-with-over-90-reduction-in-size-24c3e7d1f52b)
